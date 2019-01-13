@@ -110,3 +110,15 @@
 - reference to https://ubuntuforums.org/showthread.php?t=2258746
 
   > Apache has more than one way to split itself into multiple handlers for connections. Those are called MPM (Multi Processing Mo dule). You are using a thread based MPM. The cgi module can't work with that, so an equivalent module - cgid - gets activated.  
+
+<br>
+
+<br>
+
+- 기타 에러 발생 시, 아래 명령어로 오류 확인 가능
+
+  ```shell
+  sudo tail -f /var/log/apache2/error.log
+  ```
+
+  
