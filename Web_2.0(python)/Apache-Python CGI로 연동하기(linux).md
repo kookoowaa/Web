@@ -76,42 +76,50 @@
   print(1+300)
   ```
 
-  
 
 ## Troubleshoot
 
-- `sudo a2enmod cgi` 실행 시 다음과 같은 문구가 반환 되는 경우가 있음
-
-  ```shell
-  sudo a2enmod cgi
-  
-  Your MPM seems to be threaded. Selecting cgid instead of cgi.
-  Enabling module cgid.
-  To activate the new configuration, you need to run:
-  service apache2 restart
-  ```
-
-- 정상적으로 실행된다면 다행이지만 CGI 옵션이 실행되지 않고 py 스크립트만 반복 반환 되는 경우가 있음
-
-- 아래 코드를 통해 mpm을 죽이고 CGI를 활성화 하여 문제 해결
-
-  ```shell
-  sudo a2dismod mpm_event
-  sudo a2enmod mpm_prefork
-  sudo service apache2 restart
-  
-  sudo a2enmod cgi
-  
-  Enabling module cgi.
-  To activate the new configuration, you need to run:
-  service apache2 restart
-  ```
-
-- reference to https://ubuntuforums.org/showthread.php?t=2258746
-
-  > Apache has more than one way to split itself into multiple handlers for connections. Those are called MPM (Multi Processing Mo dule). You are using a thread based MPM. The cgi module can't work with that, so an equivalent module - cgid - gets activated.  
+> - `sudo a2enmod cgi` 실행 시 다음과 같은 문구가 반환 되는 경우가 있음
+>
+>   ```shell
+>   sudo a2enmod cgi
+>   
+>   Your MPM seems to be threaded. Selecting cgid instead of cgi.
+>   Enabling module cgid.
+>   To activate the new configuration, you need to run:
+>   service apache2 restart
+>   ```
+>
+>   - 정상적으로 실행된다면 다행이지만 CGI 옵션이 실행되지 않고 py 스크립트만 반복 반환 되는 경우가 있음
+>   - 아래 코드를 통해 mpm을 죽이고 CGI를 활성화 하여 문제 해결
+>
+>   ```shell
+>   sudo a2dismod mpm_event
+>   sudo a2enmod mpm_prefork
+>   sudo service apache2 restart
+>   
+>   sudo a2enmod cgi
+>   
+>   Enabling module cgi.
+>   To activate the new configuration, you need to run:
+>   service apache2 restart
+>   ```
+>
+>   - reference to https://ubuntuforums.org/showthread.php?t=2258746
+>
+>     > Apache has more than one way to split itself into multiple handlers for connections. Those are called MPM (Multi Processing Mo dule). You are using a thread based MPM. The cgi module can't work with that, so an equivalent module - cgid - gets activated.  
 
 <br>
+
+> - 모든 설정을 마친 후에도 `(13)Permission denied: access to //// denied` 와 함께 .py 파일이 실행되지않는다면 권한 문제일 경우가 있음
+>
+> - 확실한 것은 아니지만 ubuntu 상에서 권한 부여 후 문제 해결
+>
+> - 예) `index.py` 파일에 권한 부여
+>
+>   ```shell
+>   sudo chmod a+x index.py
+>   ```
 
 <br>
 
@@ -120,5 +128,3 @@
   ```shell
   sudo tail -f /var/log/apache2/error.log
   ```
-
-  
