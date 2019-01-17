@@ -30,12 +30,13 @@ Desktop 설치
 2. desktop 설치
 
    ```shell
-   sudo apt-get install ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+   sudo apt-get install ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal autocutsel -y
    ```
 
 3. vnc server 설치
 
    ```shell
+   //sudo apt-get install vnc4server
    sudo apt-get -y install tightvncserver
    ```
 
