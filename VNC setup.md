@@ -68,16 +68,25 @@
    gnome-session --session=gnome-flashback-metacity --disable-acceleration-check --debug &
    ```
 
+   vnc  default 크기는 다음과 같이 설정
+
    ```shell
+   nano ~/.vncrc
    
+   # 다음 한줄 추가
+   # $geometry = "1400x850";
    ```
+
+   
 
 6. 유저 권한 부여
 
    ```shell
    ## <계정명>을 sudo 그룹에 추가
+   sudo usermod -a -G sudo ubuntu
    sudo usermod -a -G sudo <계정명>
    
+   # 아래 명령어로 추가 여부 확인
    su - <계정명>
    ```
 
@@ -95,20 +104,54 @@
 
 
 
-
-7. Apache 설치
+8. Apache 설치
 
    ```shell
-   
-   ```
-
-8. Git repo clone 및 Apache default 폴더 수정
-
-   ```she
-   
+   sudo apt-get install apache2
    ```
 
    
+
+
+
+9. Git repo clone 및 Apache default 폴더 수정
+
+   ```shell
+   cd <원하는 폴더로 이동>
+   git clone 
+   ```
+
+   - 다음 2개의 파일을 수정하면 default 페이지 변경 가능
+
+   ```shell
+   /etc/apache2/apache2.conf
+   /etc/apache2/sites-available/000-default.conf
+   ```
+
+   - 먼저 `apache2.conf`를 수정
+
+   ```
+   <Directory /var/www/html>
+       Options Indexes FollowSymLinks
+       AllowOverride None
+       Require all granted
+   </Directory>
+   ```
+
+   - 코드에서 위 부분을 찾아`<Directory /var/www/html>` 를 원하는 디렉토리로 수정
+
+   - 다음 `000-default.conf ` 수정
+
+   ```
+   DocumentRoot /var/www/html
+   ```
+
+   - 마찬가지로 위에서 `var/www/html`을 원하는 디렉토리로 수정
+   - 필요 시 shell 통해 권한 부여 절차가 요구될 수 있음
+
+   
+
+
 
 기타 세팅
 
