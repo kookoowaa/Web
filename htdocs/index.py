@@ -3,6 +3,10 @@
 print("content-type: text/html; charset=utf-8")
 print()
 
+import cgi
+form = cgi.FieldStorage()
+pageId = form['id'].value
+print(pageId)
 
 print('''
 <!doctype html>
@@ -13,14 +17,14 @@ print('''
 </head>
 
 <body>
-  <h1><a href="index.html?id=WEB">WEB</a></h1>
+  <h1><a href="index.py?id=WEB">WEB</a></h1>
   <ol>
-    <li><a href="1.html">HTML</a></li>
-    <li><a href="2.html">CSS</a></li>
-    <li><a href="3.html">JavaScript</a></li>
+    <li><a href="index.py?id=HTML">HTML</a></li>
+    <li><a href="index.py?id=CSS">CSS</a></li>
+    <li><a href="index.py?id=JavaScript">JavaScript</a></li>
   </ol>
 
-  <h2>WEB</h2>
+  <h2>{title}</h2>
   <p>
     The World Wide Web, also known as the WWW and the Web, is an information space where documents and other web resources are identified by Uniform Resource Locators (URLs), interlinked by hypertext links, and accessible via the Internet.[1] English scientist Tim Berners-Lee invented the World Wide Web in 1989. He wrote the first web browser in 1990 while employed at CERN near Geneva, Switzerland.[2][3] The browser was released outside CERN in 1991, first to other research institutions starting in January 1991 and to the general public on the Internet in August 1991.
 
@@ -32,4 +36,4 @@ print('''
 
 </body>
 
-''')
+'''.format(title=pageId))
