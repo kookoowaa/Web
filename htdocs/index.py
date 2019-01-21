@@ -6,7 +6,6 @@ print()
 import cgi
 form = cgi.FieldStorage()
 pageId = form['id'].value
-print(pageId)
 
 print('''
 <!doctype html>
