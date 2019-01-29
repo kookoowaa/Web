@@ -1,15 +1,13 @@
 #!/usr/bin/python3
 
-import cgi
+import cgi, os
 
 form = cgi.FieldStorage()
-title = form["title"].value
-desc = form['description'].value
+pageId = form["pageId"].value
 
-openedFile = open('data/'+title, 'w')
-openedFile.write(desc)
-openedFile.close()
+
+os.remove('data/'+pageId)
 
 #Redirection
-print("Location: index.py?id="+title)
+print("Location: index.py")
 print()

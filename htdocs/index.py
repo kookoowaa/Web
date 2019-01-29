@@ -21,7 +21,7 @@ if 'id' in form:
       <input type="hidden" name="pageId" value="{}">
       <input type="submit" value="delete">
     </form>
-  '''
+  '''.format(pageId)
 else:
   pageId = 'WEB'
   update_link = ''
