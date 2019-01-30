@@ -2,30 +2,7 @@
 
 print("content-type: text/html; charset=utf-8")
 print()
-import cgi, os, view
-
-#Refactoring(개선)
-
-
-
-
-form = cgi.FieldStorage()
-if 'id' in form:
-  pageId = form['id'].value
-  update_link = '<a href = "update.py?id={}">update</a>'.format(pageId)
-  delete_action = '''
-    <form action="process_delete.py" method="post">
-      <input type="hidden" name="pageId" value="{}">
-      <input type="submit" value="delete">
-    </form>
-  '''.format(pageId)
-else:
-  pageId = 'WEB'
-  update_link = ''
-  delete_action = ''
-
-description = open('data/'+pageId, 'r', encoding='utf-8').read()
-
+import cgi, os, module
 
 print('''
 <!doctype html>
@@ -38,7 +15,7 @@ print('''
 <body>
   <h1><a href="index.py">WEB</a></h1>
   <ol>{list}</ol>
-  <a href = "create.py">create</a>
+  {create}
   {update}
   {delete}
   <h2>{title}</h2>
@@ -47,6 +24,6 @@ print('''
 
 </body>
 
-'''.format(title = pageId, desc = description, 
-           list = view.getList(), update = update_link,
-           delete = delete_action))
+'''.format(title = module.classification()['pageId'], desc = module.classification()['desc'], 
+           list = module.getList(), create = module.classification()['create'],
+           update = module.classification()['update'], delete = module.classification()['delete']))

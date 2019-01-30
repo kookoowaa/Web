@@ -3,7 +3,7 @@
 print("content-type: text/html; charset=utf-8")
 print()
 
-import cgi, os, view
+import cgi, os, module
 
 form = cgi.FieldStorage()
 if 'id' in form:
@@ -36,4 +36,4 @@ print('''
 </body>
 
 
-'''.format(title=pageId, desc = description, list = view.getList()))
+'''.format(title=pageId, desc = description, list = module.getList()))
