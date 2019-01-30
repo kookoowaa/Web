@@ -17,6 +17,17 @@ def average():
     print(r)
 '''
 
+'''
+#parameter = [a,b,c]
+#argument = [10,20,30]
+def average(a+b+c):
+    s = a + b + c
+    r = s / 3
+    print(r)
+
+average(10,20,30)
+'''
+
 def average(*args):
     x = 0
     for number in args:
