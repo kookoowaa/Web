@@ -3,14 +3,7 @@
 print("content-type: text/html; charset=utf-8")
 print()
 
-import cgi, os
-
-files = os.listdir('data/')
-listStr = ''
-for item in files:
-  if item != 'WEB':
-    listStr = listStr + '<li><a href="index.py?id={id}">{id}</a></li>'.format(id=item)
-
+import cgi, os, view
 
 form = cgi.FieldStorage()
 if 'id' in form:
@@ -44,4 +37,4 @@ print('''
 </body>
 
 
-'''.format(title=pageId, desc = description, list = listStr, form_default_title = pageId, form_default_desc=description))
+'''.format(title=pageId, desc = description, list = view.getList(), form_default_title = pageId, form_default_desc=description))

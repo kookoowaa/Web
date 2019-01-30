@@ -2,14 +2,11 @@
 
 print("content-type: text/html; charset=utf-8")
 print()
+import cgi, os, view
 
-import cgi, os
+#Refactoring(개선)
 
-files = os.listdir('data/')
-listStr = ''
-for item in files:
-  if item != 'WEB':
-    listStr = listStr + '<li><a href="index.py?id={id}">{id}</a></li>'.format(id=item)
+
 
 
 form = cgi.FieldStorage()
@@ -50,4 +47,6 @@ print('''
 
 </body>
 
-'''.format(title=pageId, desc = description, list = listStr, update = update_link, delete=delete_action))
+'''.format(title = pageId, desc = description, 
+           list = view.getList(), update = update_link,
+           delete = delete_action))
