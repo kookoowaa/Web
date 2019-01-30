@@ -1,5 +1,6 @@
 import cgi, os
 
+
 def getList():
   files = os.listdir('data/')
   listStr = ''
@@ -8,8 +9,12 @@ def getList():
       listStr = listStr + '<li><a href="index.py?id={id}">{id}</a></li>'.format(id=item)
   return listStr
 
+
+
 def classification():
+  
   form = cgi.FieldStorage()
+
   if 'id' in form:
     pageId = form['id'].value
     update_link = '<a href = "update.py?id={}">update</a>'.format(pageId)
@@ -19,11 +24,11 @@ def classification():
         <input type="submit" value="delete">
       </form>
     '''.format(pageId)
+
   else:
     pageId = 'WEB'
     update_link = ''
     delete_action = ''
-  
   create_list = '<a href = "create.py">create</a>'
   description = open('data/'+pageId, 'r', encoding='utf-8').read()
 

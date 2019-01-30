@@ -5,15 +5,6 @@ print()
 
 import cgi, os, module
 
-form = cgi.FieldStorage()
-if 'id' in form:
-  pageId = form['id'].value
-else:
-  pageId = 'WEB'
-
-description = open('data/'+pageId, 'r', encoding='utf-8').read()
-
-
 print('''
 <!doctype html>
 <html>
@@ -37,4 +28,4 @@ print('''
 </body>
 
 
-'''.format(title=pageId, desc = description, list = module.getList(), form_default_title = pageId, form_default_desc=description))
+'''.format(title=module.classification()['pageId'], desc = module.classification()['desc'], list = module.getList(), form_default_title = pageId, form_default_desc=description))
