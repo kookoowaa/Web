@@ -5,6 +5,8 @@ print()
 import cgi, os, module
 
 cgi_data = module.classification()
+cgi_data['desc'] = cgi_data['desc'].replace('<', '&lt;')
+cgi_data['desc'] = cgi_data['desc'].replace('>', '&gt;')
 
 print('''
 <!doctype html>
