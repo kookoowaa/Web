@@ -1,5 +1,5 @@
 import cgi, os
-
+from html_sanitizer import Sanitizer
 
 def getList():
   files = os.listdir('data/')
@@ -14,6 +14,7 @@ def getList():
 def classification():
   
   form = cgi.FieldStorage()
+  sanitizer = Sanitizer()
 
   if 'id' in form:
     pageId = form['id'].value
@@ -29,7 +30,9 @@ def classification():
     pageId = 'WEB'
     update_link = ''
     delete_action = ''
+
   create_list = '<a href = "create.py">create</a>'
   description = open('data/'+pageId, 'r', encoding='utf-8').read()
+  description = sanitizer.sanitize(description)
 
   return {'pageId':pageId, 'update':update_link, 'delete':delete_action, 'create': create_list, 'desc': description}
