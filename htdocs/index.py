@@ -4,6 +4,8 @@ print("content-type: text/html; charset=utf-8")
 print()
 import cgi, os, module
 
+cgi_data = module.classification()
+
 print('''
 <!doctype html>
 <html>
@@ -21,9 +23,7 @@ print('''
   <h2>{title}</h2>
   <p>{desc}</p>
 
-
 </body>
-
-'''.format(title = module.classification()['pageId'], desc = module.classification()['desc'], 
-           list = module.getList(), create = module.classification()['create'],
-           update = module.classification()['update'], delete = module.classification()['delete']))
+'''.format(title = cgi_data['pageId'], desc = cgi_data['desc'], 
+           list = module.getList(), create = cgi_data['create'],
+           update = cgi_data['update'], delete = cgi_data['delete']))
