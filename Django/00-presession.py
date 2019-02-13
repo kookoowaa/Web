@@ -250,8 +250,60 @@ if __name__ =='__main__':
 
 ### ex13- 웹서버
 
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response_only(200, 'OK')
+        self.send_header("content-Type", 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"Hello World")
+
+if __name__ == '__main__':
+    server = HTTPServer(('',8888), MyHandler)
+    print("Started WebServer on port 8888....")
+    print("Press ^C to quit server")
+    server.serve_forever()
+
+# 별도의 위 과정 없이도 내부 클래스 만으로 서버 구현이 가능 
+# > python -m http.server 8888
+
+
 ### ex14- CGI 웹서버 시험용 스크립트
+# Django\RedBook\ch2\cgi-server 폴더에서 서버 구현
+# > python -m http.server 8888 --cgi
+
+import cgi
+
+form = cgi.FieldStorage()
+name = form.getvalue('name')
+email = form.getvalue('email')
+url = form.getvalue('url')
+
+print("Content-Type: text/plain")
+print()
+
+print("Welcome.. CGI Script")
+print("name is", name)
+print("email is", email)
+print('url is', url)
 
 ### ex15- CGI 웹서버 시험용 클라이언트
+
+from urllib.request import urlopen
+from urllib.parse import urlencode
+
+
+url = "http://127.0.0.1:8888/cgi-bin/script.py"
+data = {
+    'name': '김석훈',
+    'email': 'shkim@naver.com',
+    'url': 'http://www.naver.com',
+}
+encData = urlencode(data)
+postData = encData.encode('ascii')
+
+f = urlopen(url, postData)   # POST
+print(f.read().decode('cp949'))
 
 ### ex16- WSGI 서버
