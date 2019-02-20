@@ -5,7 +5,7 @@
   ```
   > notepad models.py					// 테이블 정의
   > notepad admins.py					// 정의된 테이블을 Admin 화면에 제공
-  > python manage.py makemigrations	// db에 변경이 필요한 사항을 추출
+  > python manage.py makemigrations	 // db에 변경이 필요한 사항을 추출
   > python manage.py migrate			// db에 변경 사항을 반영
   > python manage.py runserver		// 개발용 웹서버로 진행사항 확인
   ```
@@ -87,7 +87,7 @@ ___
   - `models.py`모듈에서 정의한 Question, Choice 클래스를 임포트
   - `admin.site.register()`함수를 사용하여 임포트한 클래스를 admin 사이트에 등록
 
-- 위와 같이 테이블을 만들 떄에는 `models.py`와 `admin.py` 두개의 파일을 함께 수정해야 함
+- 위와 같이 테이블을 만들 때에는 `models.py`와 `admin.py` 두개의 파일을 함께 수정해야 함
 
 
 
@@ -95,13 +95,34 @@ ___
 
 ## 3. 데이터베이스 변경사항 반영
 
+- 위 단계까지는 클래스로 테이블 정으만 변경한 상태
 
+- 테이블의 신규 생성, 정의변경 등 db에 변경이 필요한 사항이 있으면, 이를 db에 실제로 반영해주어야 함
+
+- 아래 명령으로 변경사항을 db에 반영
+
+  ```
+  ~Django\ch3> python manage.py makemigrations
+  ~Django\ch3> python manage.py migrate
+  ```
+
+- `makemigrations`명령으로 polls/migrations 디렉토리 하위에 마이그레이션 파일 생성 (본 예제에서는 `0001_initial.py`)
+
+- 위 마이그레이션 파일을 이용해 `migrate`명령으로 db에 테이블 생성
+
+- 변경 작업 에 대한 sql 로그는 아래 명령으로 확인 가능
+
+  ```
+  ~Django\ch3> python manage.py sqlmigrate polls 0001
+  ```
+
+  
 
 ___
 
 ## 4. 작업 확인하기
 
-
+- 개발용 웹서버로 변경사항을 확인하면 (Admin 사이트), Users, Groups 이외에 Questions와 Choice 테이블 확인 가능
 
 
 
