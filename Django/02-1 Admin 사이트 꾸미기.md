@@ -97,15 +97,128 @@
 
 ### 6. 테이블 형식으로 보여주기
 
+- 위와 같은 화면은 기존 방식에 비해 반복작업이 용이하기는 하지만, 항목이 많아질 경우 한화면에서 확인하기 불편할 수 있음
+
+- 이를 아래와 같이 보기 편하도록 테이블 형식으로 표현 가능:
+
+  ```python
+  ### polls/admin.py
+  
+  
+  class ChoiceInline(admin.TabularInline):
+      ...
+  ```
+
+  ![](figs/02_multiple_choice01.png)
+
 ### 7. 레코드 리스트 컬럼 지정하기
+
+- Admin 사이트의 첫 페이지에서 테이블명을 클릭하면, 테이블 리스트를 반환
+
+- 여기서 테이블 리스트의 column 값은 `models.py`에서 정의한 `__str__()` 메소드의 리턴값을 레코드의 제목으로 사용
+
+  ![](figs/02_question_list01.png)
+
+- 마찬가지로 `polls/admin.py`를 수정하여 컬럼 항목을 지정 가능
+
+  ```python
+  ### polls/admin.py
+  
+  inlines = [ChoiceInline]	# Choice 모델 클래스 같이 보기
+  list_display = ('question_text', 'pub_date')	# 레코드 리스트 컬럼 지정
+  ```
+
+  ![](figs/02_question_list02.png)
 
 ### 8. list_filter 필터
 
+- `polls/admin.py`에 `list_filter` 속성을 추가하면, UI 화면 우측에 필터 사이드바를 붙일 수도 있음
+
+  ```python
+  ### polls/admin.py
+  
+  inlines = [ChoiceInline]
+  list_display = ('question_text', 'pub_date')
+  list_filter = ['pub_date']
+  ```
+
+  ![](figs/02_filter_list.png)
+
+- [FILTER]에는 필터에 사용된 기준 필드 타입에 따라, 장고가 적절한 항목들을 반환
+- 위 예제에서는 `pub_date`가 기준 필드로, 'Today', 'Past 7 days' 같은 옵션을 제공
+
 ### 9. search_fields
+
+- 필요에 따라 검색박스를 표시하는 기능도 제공
+
+  ```python
+  ### polls/admin.py
+  
+  inlines = [ChoiceInline]
+  list_display = ('question_text', 'pub_date')
+  list_filter = ['pub_date']
+  search_fields = ['question_text']
+  ```
+
+  ![](figs/02_search_field.png)
+
+- 검색박스에 단어를 입력하면, 장고는 LIKE 쿼리로 question_text(지정한) 필드를 검색
+- 여러개의 필드를 지정 시 모든 필드에서 입력된 단어를 검색
 
 ### 10. polls/admin.py 변경 내역 정리
 
+- 최종적으로 변경된 `polls/admin.py`는 아래와 같음
+
+  ```python
+  ### polls/admin.py
+  
+  from django.contrib import admin
+  from polls.models import Question, Choice
+  
+  #class ChoiceInline(admin.StackedInline):									# 1
+  class ChoiceInline(admin.TabularInline):									# 2
+      model = Choice
+      extra = 2
+      
+  class QuestionAdmin(admin.ModelAdmin):
+      #fields = ['pub_date', 'question_text']									# 3
+      fieldsets = [														  # 4
+          (None, {'fields': ['question_text']}),
+          #('Date Information', {'fields':['pub_date']}),
+          ('Date Information', {'fields':['pub_date'], 'classes':['collapse']}), # 5
+      ]
+      inlines = [ChoiceInline]
+      list_display = ('question_text', 'pub_date')							# 6
+      list_filter = ['pub_date']											   # 7
+      search_fields = ['question_text']									   # 8
+  
+  admin.site.register(Question, QuestionAdmin)
+  admin.site.register(Choice)
+  ```
+
+  > 1. Choice 레이블 Question 테이블에 연동하여(FK) 한화면에서 변경하기
+  > 2. 테이블 형식으로 전환
+  > 3. 필드 순서 변경
+  > 4. 각 필드 분리하여 보여주기 (각 칼럼 분리)
+  > 5. 필드 접기 기능
+  > 6. 레코드 컬럼 지정
+  > 7. 필터 기능
+  > 8. 검색박스 기능
+
 ### 11. Admin 사이트 템플릿 수정
 
+- Admin 사이트의 템플릿도 개발자 취향에 맞게 수정 가능
 
+- 이 경우 장고의 기본 Admin 템플릿을 프로젝트로 복사한 후 변경
+
+  ```
+  Django> mkdir ch4
+  Django> mkdir ch4\templates
+  Django> mkdir ch4\templates\admin
+  Django> copy C:\Programming\Anaconda3\Lib\site-packages\django\contrib\admin\templates\admin\base_site.html ch4\templates\admin
+  Django> notepad mysite\settings.py
+  
+  ```
+
+  
 
