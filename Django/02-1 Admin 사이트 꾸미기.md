@@ -212,13 +212,39 @@
 - 이 경우 장고의 기본 Admin 템플릿을 프로젝트로 복사한 후 변경
 
   ```
-  Django> mkdir ch4
-  Django> mkdir ch4\templates
-  Django> mkdir ch4\templates\admin
-  Django> copy C:\Programming\Anaconda3\Lib\site-packages\django\contrib\admin\templates\admin\base_site.html ch4\templates\admin
+  Django\ch3> mkdir templates
+  Django\ch3> mkdir templates\admin
+  Django\ch3> copy C:\Programming\Anaconda3\Lib\site-packages\django\contrib\admin\templates\admin\base_site.html templates\admin
   Django> notepad mysite\settings.py
-  
   ```
 
+- `settings.py`에서는 아래 'TEMPLATE' 항목을 수정
+
+  ```python
+  ### mysite/settings.py
   
+  ...
+  
+  TEMPLATES = [
+      {
+          ...
+          'DIRS': [os.path.join(BASE_DIR, 'templates')],
+          ...
+      }
+  ]
+  
+  ...
+  ```
+
+- 복사해온 `base_site.html` 템플릿에서는 `<h1>` 태그 내용을 수정
+
+  ```html
+  ### ch3/templates/admin/base_site.html
+  
+  <h1 id="site-name">
+      <a href="{% url a'admin:index' %}"> SHK Polls Administration</a>
+  </h1>
+  ```
+
+  ![](figs/02_admin_page01.png)
 
