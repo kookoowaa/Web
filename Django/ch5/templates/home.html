@@ -5,7 +5,7 @@
 <ul>
 {% for appname in app_list %}
 {% with appname|add:":"|add:"index" as urlvar%}
-    <li><a href="{% url urlvar %}"> {{ appname }}</a></li>
+    <li><a href="{% url urlvar %}">{{ appname }}</a></li>
 {% endwith %}
 {% endfor %}
 </ul>
