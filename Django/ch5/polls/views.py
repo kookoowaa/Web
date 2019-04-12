@@ -1,20 +1,29 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.views import generic
 
 from polls.models import Question, Choice
 
-# Create your views here.
 
-def index(request):
-    latest_question_list = Question.objects.all().order_by('-pub_date')[:5]
-    context = {'latest_question_list': latest_question_list}
-    return render(request, 'polls/index.html', context)
+#-- Class-based GenericView
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+    def get_queryset(self):
+        """최근 생성된 질문 5개를 반환함"""
+        return Question.objects.order_by('-pub_date')[:5]
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id) 
-    return render(request, 'polls/detail.html', {'question': question})
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
 
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+
+
+#-- Function-based View
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -30,7 +39,3 @@ def vote(request, question_id):
         selected_choice.save()
         ## POST를 정상적으로 처리하였으면, 항상 리다이렉션 처리
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
-
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
