@@ -14,3 +14,13 @@
    - View 파일 내 오타 없는 지 확인
    - 특히 View 코드 내 `context['컨텍스트 변수명']` 부분과 템플릿 코드 내 `{% for appname in 컨텍스트 변수명` %}이 일치하는 지 재차 확인 필요
 
+# ch 3-3
+
+1. 함수형 뷰를 클래스형 뷰로 전환 후 URLconf 쪽에 문제 발생:
+
+   ```
+   File "C:\Git\Web\Django\ch5\polls\urls.py", line 21, in <module>
+   	path('', views.index, name = 'index'),
+   AttributeError: module 'polls.views' has no attribute 'index'
+   ```
+
