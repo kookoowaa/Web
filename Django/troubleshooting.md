@@ -24,3 +24,6 @@
    AttributeError: module 'polls.views' has no attribute 'index'
    ```
 
+   - `urls.py` 확인 결과 업데이트 내용이 저장되지 않은 상태에서 서버 테스트
+   - 변경된 코드 적용 후 실행 시 문제 없음
+
