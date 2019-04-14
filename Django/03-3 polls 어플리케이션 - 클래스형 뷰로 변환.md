@@ -214,11 +214,20 @@ ___
   {% endblock content %}
   ```
 
-  
+
+## 4. 로그 추가하기
+
+
 
 # Troubleshoting
 
-> 1.   File "C:\Git\Web\Django\ch5\polls\urls.py", line 21, in <module>
->        path('', views.index, name = 'index'),
+> 1. 함수형 뷰를 클래스형 뷰로 전환 후 URLconf 쪽에 문제 발생:
+>
+>    ```
+>    File "C:\Git\Web\Django\ch5\polls\urls.py", line 21, in <module>
+>    	path('', views.index, name = 'index'),
 >    AttributeError: module 'polls.views' has no attribute 'index'
-> 2. 
+>    ```
+>
+>    - `urls.py` 확인 결과 업데이트 내용이 저장되지 않은 상태에서 서버 테스트
+>    - 변경된 코드 적용 후 실행 시 문제 없음
