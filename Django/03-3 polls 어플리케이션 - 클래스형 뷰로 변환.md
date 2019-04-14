@@ -217,7 +217,80 @@ ___
 
 ## 4. 로그 추가하기
 
+- 앞장에서 생략했었지만, `settings.py` 설정을 조정하고 원하는 곳에서 로거의 메소드를 호출하는 것으로 로깅 시스템 적용 가능
 
+- 우선 `settings.py`의 끝에 다음과 같이 내용 추가:
+
+  ```python
+  # mysite/settings.py
+  
+  STATIC_URL = '/static/'
+  # 위의 내용 동일
+  
+  #-- Logging
+  # 장고의 디폴트 설정을 유지하면서 로깅 설정
+  LOGGING = {
+      'version': 1,
+      'disable_existing_loggers': False,
+      'formatters':{
+          'verbose': {
+              'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+              'datefmt': "%d/%b/%Y %H:%M:%S"
+          },
+      },
+      'handlers': {
+          'file': {
+              'level': 'DEBUG',
+              'class': 'logging.FileHandler',
+              'filename': os.path.join(BASE_DIR, 'logs', 'mysite.log'),
+              'formatter': 'verbose'
+          },
+      },
+      'loggers': {
+          'polls': {
+              'handlers': ['file'],
+              'level': 'DEBUG',
+          },
+      },
+  }
+  ```
+
+  > - 위 코드는 장고의 디폴트 설정 그대로 로거를 사용
+  > - 이름이 `mysite` 대신 `polls`로 되어 있는 것은 다음 `view.py`에서 `__name__`변수로 로거를 취득하기 위함
+
+- `views.py`도 다음과 같이 내용 추가:
+
+  ```python
+  # polls/views.py
+  
+  from polls.models import Choice, Question
+  # 위의 내용 동일
+  #-- logging 추가
+  import logging
+  logger = logging.getLogger(__name__)
+  
+  # 중간 내용 생략
+  
+  #-- Function-based View
+  def vote(request, question_id):
+      logger.debug("vote().question_id: %s" % question_id)    # logger 추가
+      question = get_object_or_404(Question, pk=question_id)
+  
+  # 이하 내용 동일
+  ```
+
+  > - `__name__`변수를 사용하여 polls 로거에서 메시지를 기록
+  > - `debug()` 메소드를 호출하여 DEBUG 수준으로 로그 레코드를 생성
+
+- `/ch5/` 에 logs 디렉토리 생성 필요하며, 정상적으로 작동시, 아래와 같은 로그 생성:
+
+  ```
+  # /logs/mysite.log
+  
+  [15/Apr/2019 08:24:47] DEBUG [polls.views:30] vote().question_id: 5
+  ```
+
+  
 
 # Troubleshoting
 
