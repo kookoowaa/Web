@@ -4,7 +4,9 @@ from django.urls import reverse
 from django.views import generic
 
 from polls.models import Question, Choice
-
+#-- logging 추가
+import logging
+logger = logging.getLogger(__name__)
 
 #-- Class-based GenericView
 class IndexView(generic.ListView):
@@ -25,6 +27,7 @@ class ResultsView(generic.DetailView):
 
 #-- Function-based View
 def vote(request, question_id):
+    logger.debug("vote().question_id: %s" % question_id)    # logger 추가
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
