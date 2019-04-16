@@ -1,0 +1,11 @@
+{# publisher_detail.html #}
+
+{% extends "base_books.html" %}
+
+{% block content %}
+<h1>
+    {{ object.name }}
+</h1>
+<a href="{{ object.website }}">{{ object.website }}</a>
+<li>Address: {{ object.address }}</li>
+{% endblock content %}

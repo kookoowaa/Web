@@ -1,0 +1,11 @@
+{# author_detail.html #}
+
+{% extends "base_books.html" %}
+
+{% block content %}
+<h1>
+    {{ object.name }}
+</h1>
+<p>{{ object.salutaiton }}</p>
+<li>Email: {{ object.email }}</li>
+{% endblock content %}
