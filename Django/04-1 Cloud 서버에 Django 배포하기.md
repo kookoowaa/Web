@@ -104,4 +104,47 @@
 
 ## 5. PythonAnywhere 웹 서버 설정하기
 
-- 
+- 서버 H/W에서 웹 서버를  인식하기 위해서 웹 서버의 설정을 변경해야 하며, 우선적으로 Web app을 생성해야 함 (도메인명은 `사용자명.pythonanywhere.com`이 됨)
+- 설정 마법사를 따라 가면 되며, 본 경우와 같이 가상환경을 사용하는 경우 Manual configuration으로 진행하면 됨
+- 이 단계부터 기동되는 PythonAnywhere 웹서버에 개발한 장고 프로그램을 실행하기 위해서는 **Code, Virtualenv, Static files** 3개 섹션의 내용을 프로젝트에 맞추어 수정해 주어야 함
+
+> ### Code
+>
+> - Code 섹션에서는 **WSGI configuration file**(`사용자명_pythonanywhere_com_wsgi.py`)의 내용을 수정해야 함
+>
+>   ```python
+>   import os
+>   import sys
+>   
+>   # project root directory
+>   path = '/home/사용자명/web/Django/ch7'
+>   if path not in sys.path:
+>       sys.path.append(path)
+>   
+>   os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+>   
+>   from django.core.wsgi import get_wsgi_application
+>   application = get_wsgi_application()
+>   ```
+
+	> ### Virtualenv
+	>
+	> - Virtualenv 섹션에서는 앞서 만든 가상 환경을 등록
+	> - 여기서는 `v3pybook` 가상환경의 루트 디렉토리인 `/home/사용자명/VENV/v3pybook/`을 등록
+
+	> ### Static files
+	>
+	> - Static files 섹션에서는 `settings.py`에서 정의한 내용을 그대로 기입
+	>
+	> - URL에는 `STATIC_URL` 값을, Directory에는 `STATIC_ROOT` 값을 등록
+	>
+	>   ```python
+	>   # /ch7/mysite/settings.py
+	>   
+	>   ...
+	>   STATIC_URL = '/static/'
+	>   STATIC_ROOT = os.path.join(BASE_DIR, 'www_dir', 'static')
+	>   ```
+
+- 여기까지 완료하였으면 reload 하였을 시 정상적으로 홈페이지를 반환
+
