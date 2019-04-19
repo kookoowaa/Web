@@ -19,7 +19,60 @@ ___
   > 7. `db.sqlite3` 파일의 위치 및 권한 변경
   > 8. 로그 파일의 권한 변경
 
-  
+
+> 1~3. `settings.py` 파일의 DEBUG 변경
+>
+> - `settings.py` 파일의 3개 항목을 아래와 같이 수정:
+>
+>   ```python
+>   # ch8/mysite/settings.py
+>   
+>   ...
+>   DEBUG = False    # 변경
+>   
+>   ALLOWED_HOSTS = ['192.168.56.101', 'localhost', '127.0.0.1']    # 변경
+>   
+>   ....
+>   
+>   STATIC_URL = '/static/'    
+>   STATIC_ROOT = os.path.join(BASE_DIR, 'www_dir', 'static')    # 추가
+>   ....
+>   ```
+>
+> 4. `collectstatic` 명령 실행
+>
+>    ```bash
+>    $ source ~/VENV/v3pybook/bin/activate
+>    (v3pybook) $ python manage.py collectstatic
+>    ```
+>
+> - 위 명령의 결과로 `STATIC_ROOT`에서 정의된 `www_dir` 디렉토리도 생성
+>
+> 5~6. `SECRET_KEY`저장 및 변경
+>
+> - `SECRET_KEY`가 노출되지 않도록 별도의 파일에 저장
+>
+> - `settings.py` 파일에서 `SECRET_KEY` 문자열을 복사한 후 아래처럼 `/ch8/www_dir/secret_key.txt` 파일에 저장
+>
+>   ```
+>   # /ch8/www_dir/secret_key.txt
+>   
+>   0f78el..irxb...&!9itbzl3w...g3&6+e2_ywap&-sps(xs(r
+>   ```
+>
+> - `settings.py` 파일에서 기존의 `SECRET_KEY` 라인을 삭제하고 `secret_key.txt`파일에서 읽어오는 코드를 추가
+>
+>   ```python
+>   # mysite/settings.py
+>   
+>   # SECURITY WARNING: keey the secrey key used in production secret!
+>   with open(os.path.join(BASE_DIR, 'www_dir', 'secret_key.txt')) as f:
+>       SECRET_KEY = f.read().strip()
+>   ```
+>
+>   
+>
+> 
 
 ___
 
