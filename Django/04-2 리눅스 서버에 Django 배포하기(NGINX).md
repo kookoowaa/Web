@@ -54,7 +54,7 @@ ___
 >
 > - `settings.py` 파일에서 `SECRET_KEY` 문자열을 복사한 후 아래처럼 `/ch8/www_dir/secret_key.txt` 파일에 저장
 >
->   ```
+>   ```python
 >   # /ch8/www_dir/secret_key.txt
 >   
 >   0f78el..irxb...&!9itbzl3w...g3&6+e2_ywap&-sps(xs(r
@@ -67,14 +67,75 @@ ___
 >   
 >   # SECURITY WARNING: keey the secrey key used in production secret!
 >   with open(os.path.join(BASE_DIR, 'www_dir', 'secret_key.txt')) as f:
->       SECRET_KEY = f.read().strip()
+>      SECRET_KEY = f.read().strip()
 >   ```
 >
->   
+> 7. SQLite3 파일의 위치 및 권한 변경
 >
-> 
+>    ```python
+>    # mysite/settings.py
+>    
+>    DATABASE = {
+>        ...
+>        'NAME': os.path.join(BASE_DIR, 'db', 'db.sqlite3'),		# 변경
+>    }
+>    ```
+>
+> - 이후 엑세스 권한을 아래처럼 변경
+>
+>   ```bash
+>   $ cd ~/web/Django/ch8/
+>   $ mkdir db
+>   $ mv db.sqlite3 db/
+>   $ chmod 777 db/
+>   $ chmod 666 db/db.sqlite3
+>   ```
+>
+> 8. 로그 파일의 액세스 권한 변경
+>
+>    ```bash
+>    $ cd ~/web/Django/ch8/
+>    $ chmod 777 logs/
+>    $ chmod 666 logs/mysite.log
+>    ```
 
 ___
 
 ## 2. NGINX 설치
+
+- NGINX 공식 사이트에는 다양한 설치 방법이 나와 있으니 참조하여 설치
+
+  ```bash
+  $ sudo apt-get update
+  $ sudo apt-get install nginx
+  ```
+
+- 공식 사이트는 https://docs.nginx.com 이며, **NGINX Plus> Admin Guide> Installing NGINX and NGINX Plus** 에서 상세정보 확인 가능
+
+- 본 경우는 `NGINX Open Source`, `Stable 버전`, `Prebuilt(컴파일 완료)`, `UBUNTU(18.04 bionic)`을 사용
+
+- NGINX 기동 및 확인은 아래와 같이 가능
+
+  ```bash
+  $ sudo nginx
+  $ curl -I 127.0.0.1
+  
+  HTTP/1.1 200 OK
+  Server: nginx/1.14.0
+  .....
+  ```
+
+- 주요 NGINX 명령어는 다음과 같음
+
+  | 명령어                   | 기능                   |
+  | ------------------------ | ---------------------- |
+  | `$ sudo nginx`           | NGINX  기동            |
+  | `$ sudo nginx -s stop`   | NGINX 정지             |
+  | `$ sudo nginx -s reload` | NGINX 재기동           |
+  | `$ sudo nginx -t`        | NGINX 설정 파일 테스트 |
+  | `$ sudo nginx -h`        | NGINX 도움말           |
+
+___
+
+## 3. NGINX 설정
 
