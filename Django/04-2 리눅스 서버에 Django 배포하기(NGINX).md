@@ -139,3 +139,122 @@ ___
 
 ## 3. NGINX 설정
 
+- NGINX 프로그램이 정상적으로 설치되었다면 WSGI 규격에 따른 uWSGI 프로그램과의 연동을 위한 설정 작업이 필요
+
+- 아래와 같이 설정파일을 생성하여 작성:
+
+  ```
+  # /etc/nginx/conf.d/ch9_nginx.conf
+  
+  server {
+  	listen 8000;
+  	server_name 127.0.0.1;
+  	
+  	# access_log /var/log/nginx/codejob.co.kr_access.log;
+  	# error_log /var/log/nginx/codejob.co.kr_error.log;
+  	
+  	location = /favicon.ico { access_log off; log_not_found off; }
+  	
+  	location /static/ {
+  		root /home/kookoowaa/web/Django/ch9/www_dir;
+  		# alias /home/kookoowaa/web/Django/ch9/www_dir/static/;
+  	}
+  	
+      location / {
+          include /home/kookoowaa/web/Django/ch9/www_dir/uwsgi_params;
+          uwsgi_pass 127.0.0.1:8001;
+          # uwsgi_pass unix://home/kookoowaa/web/Django/ch9/www_dir/ch9.sock;
+      }
+  	
+  }
+  ```
+
+  > 1. `server { }` 블록을 정의하여 가상 서버 생성
+  > 2. 8000 포트를 리슨
+  > 3. `server_name`에서 IP 주소 및 도메인을 지정 (`35.243.122.5 `)
+  > 4. URL이 `/favicon.ico`인 경우 액세스 로그에 기록하지 않음
+  > 5. URL이 `/static/`으로 시작하는 경우 정적 파일이 저장된 곳의 루트 디렉토리를 지정
+  > 6. URL이 `/`로 시작하는 경우 (위의 경우들 이외에) uwsgi 서버에 넘겨줄 파라미터를 지정하고, nginx에 uwsgi 프로그램으로 처리 위임
+
+- 위의 작업 완료 후 기존 `default.conf`사용 방지를 위해 이름을 변경
+
+  ```bash
+  $ sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
+  ```
+
+- 추가로 NGINX 설치 때 같이 생성된 `uwsgi_params` 파일은 장고 프로젝트 내 디렉토리로 복사
+
+  ```bash
+  $ cp /etc/uwsgi/nginx/uwsgi_params /home/kookoowaa/web/Django/ch9/www_dir/
+  ```
+
+___
+
+## 4. uWSGI 설치
+
+- uWSGI 설치는 다음과 같이 실행:
+
+  ```bash
+  $ sudo apt-get install python-devel
+  $ sudo apt-get install python3-pip
+  $ sudo pip3 install uwsgi
+  $ sudo apt-get install uwsgi-core
+  ```
+
+___
+
+## 5. uSWGI 설정
+
+- 장고 프로젝트 별로 하나의 설정 파일이 필요하며 vassals는 자식프로젝트를 의미하는 uWSGI의 용어임
+
+- 설정은 아래와 같이 진행:
+
+  ```
+  # /etc/uwsgi/vassals/ch8_uwsgi.ini
+  
+  [uwsgi]
+  chdir = /home/kookoowaa/web/Django/ch8
+  home = /home/kookoowaa/VENV/v3pybook
+  module = mysite.wsgi:application
+  socket = :8001
+  # socket = /home/kookoowaa/web/Django/ch8/www_dir/ch8.sock
+  # chmod-socket =666
+  master = True
+  processes = 5
+  pidfile = /tmp/ch8-master.pid
+  vacuum = True
+  max-requests = 5000
+  daemonize = /var/log/uwsgi/ch8.log
+  ```
+
+  > 상단부터 각 라인별 의미는 다음과 같음
+  >
+  > 1. `chdir`: 장고 프로젝트의 루트 디렉토리
+  > 2. `home`: 가상환경 루트 디렉토리, 가상환경을 사용하지 않으면 생략
+  > 3. `module`: `wsgi.py` 파일의 모듈경로 및 application 변수명 (`:application` 부분은 생략 가능)
+  > 4. `socket`: 웹서버와 통신할 소켓의 포트번호를 지정하며 이는 nginx 설정 파일의 `uwsgi_pass`항목의 포트 번호와 동일
+  > 5. `# socket`: 웹 서버와 유닉스 도메인 소켓을 사용할 경우의 소켓파일 경로
+  > 6. `# chmod-socket`:  nginx 및 uwsgi 프로세스가 쓰기 할수 있도록 권한 부여
+  > 7. `master`: 별도의 마스터 프로세스가 기동되도록 지정
+  > 8. `processes`: uwsgi 기동 시 자식 프로세스 5개 생성
+  > 9. `pidfile`: 마스터 프로세스 ID를 저장할 파일
+  > 10. `vacuum`: 프로세스 종료 시 소켓 파일을 포함하여 환경변수를 클리어
+  > 11. `max-requests`: 현 프로세스에서 처리할 최대 요청개수
+  > 12. `daemonize`: 백그라운드에서 프로세스가 실행되도록 데몬화 (로그파일 경로 지정)
+
+- 위와 같이 파일이 준비되면 설정 파일에서 지정한 로그 파일을 생성하고 권한 부여
+
+  ```bash
+  $ sudo mkdir /var/log/uwsgi
+  $ sudo touch /var/log/uwsgi/ch8.log
+  $ sudo chmod 666 /var/log/uwsgi/ch8.log
+  ```
+
+- uWSGI 서버는 옵션이 꽤 많은 편이므로 위의 기본설정부터 천천히 학습
+
+___
+
+## 6. 지금까지 작업 확인하기
+
+
+
