@@ -64,3 +64,16 @@
 
 ## 3. 데이터베이스 설정하기
 
+- 가장 기본적인 데이터베이스로 sqlite3를 사용 (`startproject` 명령어로 이미 sqlite3가 설치되어 있음)
+
+- 블로그에 데이터베이스를 생성하기 위해서 콘솔 창에서 아래 코드를 실행:
+```shell
+(djangogirls) ~Django-Girls> python manage.py migrate
+```
+
+## 4. 작동 여부 확인
+- 서버는 콘솔 명령을 통해 실행
+```shell
+(djangogirls) ~Django-Girls> python manage.py runserver
+```
+- 서버 작동 여부는 http://127.0.0.1:8000/ 에서 확인 가능
