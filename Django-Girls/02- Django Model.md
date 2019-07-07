@@ -42,3 +42,49 @@ INSTALLED_APPS = [
 ```
 
 ## 2. 블로그 글 모델 만들기
+
+- **모든 `model` 객체는 `blog/models.py`파일에 선언하여 모델을 생성**
+- `blog/models.py`파일을 열어 모든 내용을 삭제한 후 아래 내용을 추가
+
+```python
+#blog/models.py
+
+from django.db import models
+from django.utils import timezone
+
+
+class Post(models.Model):
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    text = models.TextField()
+    created_date = models.DateTimeField(
+            default=timezone.now)
+    published_date = models.DateTimeField(
+            blank=True, null=True)
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.title
+```
+
+> 1. `Post`는 `blog` 어플리케이션에서 정의하는 모델로, `models.Model`을 통해 `Post`가 장고 모델임을 정의하여 db에 저장되어야 함을 알려줌
+> 2. `Post`에서 정의하는 속성<sup>property</sup>은 (`author`, `title`, `text`, `created_date`, `published_date`)가 있으며, `models.ForeignKey()`, `models.CharField()` 등등으로 데이터 타입을 정의
+> 3. `Post`에서 정의하는 행동<sup>method</sup>은 `publish`와 `__str__`이 있음
+
+## 3. 데이터베이스에 모델을 위한 테이블 만들기
+
+- 데이터베이스에 `Post` 모델을 추가하기 위해 콘솔 명령을 통해 장고에 이를 선언할 필요가 있음:
+
+```shell
+~ djangogirls> python manage.py makemigrations blog
+```
+
+- 추가로 아래 명령을 통해 실제 데이터베이스에 모델 추가를 반영
+
+```shell
+~ djangogirls> python manage.py migrate blog
+```
+
