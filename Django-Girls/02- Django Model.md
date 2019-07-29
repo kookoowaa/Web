@@ -88,3 +88,14 @@ class Post(models.Model):
 ~ djangogirls> python manage.py migrate blog
 ```
 
+## 4. 모델 등록하기
+
+- 위에서 정의한 모델들을 사용하려면 `blog/admin.py`에 작성한 모델들을 불러와야 함
+```python
+#blog/admin.py ln 3]
+
+# Register your models here.
+from .models import Post
+admin.site.register(Post)
+```
+- 코드에서 알 수 있듯이 `Post` 모델을 `import` 명령어로 가져오고, `admin.site.register(Post)`로 모델을 등록
